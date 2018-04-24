@@ -1,7 +1,7 @@
 # Личный проект «YetiCave»
 
 * Студент: [Никита Казанцев](https://up.htmlacademy.ru/php/5/user/489879).
-* Наставник: `Неизвестно`.
+* Наставник: [Владимир Ульянов](https://htmlacademy.ru/profile/id135131).
 
 ---
 
