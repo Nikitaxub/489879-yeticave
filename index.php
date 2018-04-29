@@ -159,10 +159,10 @@ $itemList = ['Доски и лыжи', 'Крепления', 'Ботинки', '
     <nav class="nav">
 		<ul class="nav__list container">
 		<?php 
-		for ($i = 0; $i < count($itemList); $i++) {
+		foreach ($itemList as $itemNum => $item) {
 			?>
 			<li class="nav__item">
-				<a href="all-lots.html"><?php echo $itemList[$i]?></a>
+				<a href="all-lots.html"><?php echo $item?></a>
 			</li>
 			<?php
 		}
