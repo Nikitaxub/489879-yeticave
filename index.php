@@ -128,7 +128,7 @@ $itemList = ['Доски и лыжи', 'Крепления', 'Ботинки', '
         </div>
         <ul class="lots__list">
 			<?php 				
-			foreach($lotsList as $lot_id => $lot) {
+			foreach($lotsList as $lotNum => $lot) {
 				?>
 				<li class="lots__item lot">
 					<div class="lot__image">
