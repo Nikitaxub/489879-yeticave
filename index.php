@@ -45,7 +45,7 @@ $lotsList = [
 
 $itemList = ['Доски и лыжи', 'Крепления', 'Ботинки', 'Одежда', 'Инструменты', 'Разное'];
 
-function formattingCost ($value) {
+function formatCost ($value) {
     return number_format(ceil($value), 0, '', ' ').'  ₽';
 }
 
@@ -145,7 +145,7 @@ function formattingCost ($value) {
 						<div class="lot__state">
 							<div class="lot__rate">
 								<span class="lot__amount">Стартовая цена</span>
-								<span class="lot__cost"><?php echo formattingCost($lot['cost'])?></span>
+								<span class="lot__cost"><?php echo formatCost($lot['cost'])?></span>
 							</div>
 							<div class="lot__timer timer">
 
