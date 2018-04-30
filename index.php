@@ -44,6 +44,11 @@ $lotsList = [
 ];
 
 $itemList = ['Доски и лыжи', 'Крепления', 'Ботинки', 'Одежда', 'Инструменты', 'Разное'];
+
+function costFormatting ($lotCost) {
+    return number_format(ceil($lotCost), 0, '', ' ').'  ₽';
+}
+
 ?>
 <!DOCTYPE html>
 <html lang="ru">
@@ -140,7 +145,7 @@ $itemList = ['Доски и лыжи', 'Крепления', 'Ботинки', '
 						<div class="lot__state">
 							<div class="lot__rate">
 								<span class="lot__amount">Стартовая цена</span>
-								<span class="lot__cost"><?php echo $lot['cost']?><b class="rub">р</b></span>
+								<span class="lot__cost"><?php echo costFormatting($lot['cost'])?></span>
 							</div>
 							<div class="lot__timer timer">
 
