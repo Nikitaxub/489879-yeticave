@@ -43,7 +43,7 @@
                             <span class="lot__cost"><?= formatCost(htmlspecialchars($lot['cost'])); ?></span>
                         </div>
                         <div class="lot__timer timer">
-
+                            <?= $remainingTime; ?>
                         </div>
                     </div>
                 </div>
