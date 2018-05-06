@@ -1,3 +1,4 @@
+drop database if exists yeti_cave;
 create database yeti_cave character set utf8;
 use yeti_cave;
 create table categories(
@@ -7,9 +8,9 @@ create table categories(
 create table lots(
   id int unsigned auto_increment primary key,
   create_date datetime default current_timestamp,
-  name varchar(255),
+  name varchar(255) not null,
   description varchar(255) default '',
-  image text,
+  image varchar(255),
   initial_price decimal(12,4) unsigned default 0,
   close_date datetime,
   bet_increment decimal(12,4) unsigned default 1000,
@@ -29,8 +30,8 @@ create table users(
   registration_date datetime default current_timestamp,
   email varchar(255) not null,
   name varchar(50) not null,
-  password_hash varchar(255),
-  avatar text, /* default 'img/unknown-raccoon.v4.svg', вроде как баг #19498 in the MySQL Bugtracker*/
+  password_hash varchar(255) not null,
+  avatar varchar(255) default 'img/unknown-raccoon.v4.svg',
   contacts varchar(255) not null default 'world'
 );
 create unique index ui_users_email on users(email);
