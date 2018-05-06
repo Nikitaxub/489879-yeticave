@@ -14,9 +14,9 @@ create table lots(
   initial_price decimal(12,4) unsigned default 0,
   close_date datetime,
   bet_increment decimal(12,4) unsigned default 1000,
-  author_id int unsigned,
+  author_id int unsigned not null,
   winner_id int unsigned,
-  category_id tinyint unsigned
+  category_id tinyint unsigned not null
 );
 create table bets(
   id bigint unsigned auto_increment primary key,
