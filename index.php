@@ -8,5 +8,6 @@ $layoutContent = renderTemplate('templates/layout.php', ['itemList' => $itemList
     'title' => 'Акцион YetiCave', 'user_avatar' => $user_avatar, 'user_name' => $user_name, 'is_auth' => $is_auth]);
 
 echo $layoutContent;
+
 ?>
 
