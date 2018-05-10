@@ -4,7 +4,7 @@ create database yeti_cave character set utf8 collate utf8_unicode_ci;
 
 use yeti_cave;
 
-create table categories(
+create table categories1(
   id tinyint unsigned auto_increment primary key,
   name varchar(50) not null
 );

@@ -61,7 +61,7 @@
             foreach ($itemList as $itemNum => $item) {
                 ?>
                 <li class="nav__item">
-                    <a href="all-lots.html"><?php echo $item?></a>
+                    <a href="all-lots.html"><?php echo $item['name']?></a>
                 </li>
                 <?php
             }
