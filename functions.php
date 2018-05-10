@@ -13,9 +13,11 @@ function renderTemplate($filename, $parameters = []) {
         return '';
     }
 }
+
 function getRemainingTime() {
     date_default_timezone_set('Europe/Moscow');
     $remainingTimeInSec = strtotime( 'tomorrow') - time();
     return intdiv($remainingTimeInSec, 3600).':'.intdiv($remainingTimeInSec % 3600,  60);
 }
+
 ?>
