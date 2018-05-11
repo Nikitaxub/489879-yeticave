@@ -3,7 +3,7 @@ require('data.php');
 
 require('functions.php');
 
-$con = connectDB($db_host, $user, $password, $db);
+$con = connectDB($db_host, $db_user, $db_password, $db_name);
 
 $categories = getCategories($con);
 
