@@ -1,13 +1,6 @@
 <?php
-require('data.php');
-
 require('functions.php');
-
-$con = connectDB($db_host, $db_user, $db_password, $db_name);
-
-$categories = getCategories($con);
-
-$lots = getLots($con);
+require('data.php');
 
 $indexContent = renderTemplate('templates/index.php', ['lotsList' => $lots, 'remainingTime' => getRemainingTime()]);
 $layoutContent = renderTemplate('templates/layout.php', ['itemList' => $categories, 'content' => $indexContent,

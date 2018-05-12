@@ -24,12 +24,16 @@ function connectDB($host, $user, $password, $db) {
     $connection = mysqli_connect($host, $user, $password, $db);
 
     if ($connection === false) {
-        print("Ошибка подключения: ". mysqli_connect_error());
+        print('Ошибка подключения: '. mysqli_connect_error());
         die();
     }
 
-    mysqli_set_charset($connection, "utf8");
+    mysqli_set_charset($connection, 'utf8');
     return $connection;
+}
+
+function prepareQuery() {
+
 }
 
 function getCategories($connection) {
@@ -38,7 +42,7 @@ function getCategories($connection) {
     $res = mysqli_query($connection, $sql);
     if ($res === false) {
         $error = mysqli_error($connection);
-        print("Ошибка MySQL: ". $error);
+        print('Ошибка MySQL: '. $error);
         die();
     }
 
@@ -48,28 +52,41 @@ function getCategories($connection) {
 }
 
 function getLots($connection) {
-    $sql = "
+    $sql = '
 select 
 	 l.name, 
 	 l.image,
-	 ifnull((select bi.price from bets bi where l.id = bi.lot_id order by bi.price desc limit 1), l.initial_price) 'actual_price',
-	 c.name 'category'
+	 ifnull((select bi.price from bets bi where l.id = bi.lot_id order by bi.price desc limit 1), l.initial_price) "actual_price",
+	 c.name "category"
 from lots l
 join categories c on l.category_id = c.id
 where ifnull(l.close_date, now() + 1) > now()
 group by l.name, l.initial_price, l.image, c.name
 order by l.create_date desc
-limit 9";
+limit 9';
 
     $res = mysqli_query($connection, $sql);
     if ($res === false) {
         $error = mysqli_error($connection);
-        print("Ошибка MySQL: ". $error);
+        print('Ошибка MySQL: '. $error);
         die();
     }
 
     $lots = mysqli_fetch_all($res, MYSQLI_ASSOC );
 
     return $lots;
+}
+
+function getEntities($connection, $sql) {
+    $res = mysqli_query($connection, $sql);
+    if ($res === false) {
+        $error = mysqli_error($connection);
+        print('Ошибка MySQL: '. $error);
+        die();
+    }
+
+    $rows = mysqli_fetch_all($res, MYSQLI_ASSOC );
+
+    return $rows;
 }
 ?>
