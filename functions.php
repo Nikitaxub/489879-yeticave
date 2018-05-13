@@ -32,7 +32,27 @@ function connectDB($host, $user, $password, $db) {
     return $connection;
 }
 
-function getEntities($connection, $sql) {
+function getList($connection, $list, $parameters = []) {
+    switch ($list) {
+        case 'categoriesList':
+            $sql = 'select c.name from categories c order by c.id';
+            break;
+        case 'lotsList':
+            $sql = "
+select 
+	 l.name, 
+	 l.image,
+	 ifnull((select bi.price from bets bi where l.id = bi.lot_id order by bi.price desc limit 1), l.initial_price) 'actual_price',
+	 c.name 'category'
+from lots l
+join categories c on l.category_id = c.id
+where ifnull(l.close_date, now() + 1) > now()
+group by l.name, l.initial_price, l.image, c.name
+order by l.create_date desc
+limit {$parameters['lotsLimit']}";
+            break;
+    }
+
     $res = mysqli_query($connection, $sql);
     if ($res === false) {
         $error = mysqli_error($connection);
