@@ -10,10 +10,10 @@ $db_host = 'localhost';
 $db_user = 'root';
 $db_password = '';
 
-$con = connectDB($db_host, $db_user, $db_password, $db_name);
+$connection = connectDB($db_host, $db_user, $db_password, $db_name);
 
 $lotsLimit = 9;
 
-$itemList = getList($con, 'categoriesList', []);
+$itemList = getItemList($connection);
 
-$lotsList = getList($con, 'lotsList', ['lotsLimit' => $lotsLimit]);
+$lotsList = getLotsList($connection, $lotsLimit);
