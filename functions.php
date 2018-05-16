@@ -48,15 +48,7 @@ order by l.create_date desc", $limit);
 }
 
 function concatQueryLimit($sql, $limit) {
-    if (is_int($limit) === true) {
-        return $sql.' limit '.$limit;
-    }
-    else {
-        /*на случай, если пользователь подсунет не численное значение,
-        ограничиваю вывод 9 лотами, чтоб не грузить сервер*/
-        return $sql.' limit 9';
-    }
-
+    return $sql.' limit '.$limit;
 }
 
 function getItemList($connection) {
