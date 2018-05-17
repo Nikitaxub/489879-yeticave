@@ -1,7 +1,6 @@
 <?php
-require('data.php');
-
 require('functions.php');
+require('data.php');
 
 $indexContent = renderTemplate('templates/index.php', ['lotsList' => $lotsList, 'remainingTime' => getRemainingTime()]);
 $layoutContent = renderTemplate('templates/layout.php', ['itemList' => $itemList, 'content' => $indexContent,
