@@ -47,8 +47,7 @@ function getNumEnding($number, $endingArray)
     $number = $number % 100;
     if ($number>=11 && $number<=19) {
         $returnValue = $number.' '.$endingArray[2];
-    }
-    else {
+    } else {
         $i = $number % 10;
         switch ($i)
         {

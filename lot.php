@@ -2,10 +2,9 @@
 require('functions.php');
 require('data.php');
 
-if (isset($_GET['lot_id'])) {
+if (ctype_digit($_GET['lot_id'])) {
     $lot_id = intval($_GET['lot_id']);
-}
-else {
+} else {
     header("Location: ./404.php");
 }
 
