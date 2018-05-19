@@ -5,13 +5,13 @@ require('data.php');
 if (ctype_digit($_GET['lot_id'])) {
     $lot_id = intval($_GET['lot_id']);
 } else {
-    header("Location: ./404.php");
+    redirect404();
 }
 
 $lot = getLot($connection, $lot_id);
 
 if (!$lot[0]) {
-    header("Location: ./404.php");
+    redirect404();
 }
 
 $betsList = getBetList($connection, $lot_id);

@@ -145,4 +145,9 @@ function getBetList($connection, $lot_id) {
     return checkResult($connection, $sql);
 }
 
+function redirect404() {
+    header("Location: 404.php");
+}
 ?>
+
+
