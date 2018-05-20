@@ -1,4 +1,5 @@
 <?php
+
 require('functions.php');
 require('data.php');
 
@@ -16,10 +17,11 @@ if (!$lot[0]) {
 
 $betsList = getBetList($connection, $lot_id);
 
-$headerContent = renderTemplate('templates/header_common.php', ['user_avatar' => $user_avatar, 'user_name' => $user_name,
+$headerContent = renderTemplate('templates/header-common.php', ['user_avatar' => $user_avatar, 'user_name' => $user_name,
     'is_auth' => $is_auth]);
-$mainContent = renderTemplate('templates/lot.php', ['lot' => $lot[0], 'betsList' => $betsList]);
-$footerContent = renderTemplate('templates/footer_common.php', ['itemList' => $itemList]);
+$nav_content = renderTemplate('templates/nav-items.php', []);
+$mainContent = renderTemplate('templates/lot.php', ['lot' => $lot[0], 'betsList' => $betsList, 'nav_content' => $nav_content]);
+$footerContent = renderTemplate('templates/footer-common.php', ['itemList' => $itemList]);
 
 $layoutContent = renderTemplate('templates/layout.php', ['header_content' => $headerContent, 'main_content' => $mainContent,
     'footer_content' => $footerContent, 'title' => $lot[0]['name'], 'main_class' => '']);

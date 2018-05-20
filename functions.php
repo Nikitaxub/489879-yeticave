@@ -1,4 +1,5 @@
 <?php
+
 function formatCost ($value) {
     return number_format(ceil($value), 0, '', ' ');
 }
@@ -96,7 +97,7 @@ function concatQueryLimit($sql, $limit) {
 }
 
 function getItemList($connection) {
-    $sql = 'select c.name from categories c order by c.id';
+    $sql = 'select c.name, c.id from categories c order by c.id';
 
     return checkResult($connection, $sql);
 }
