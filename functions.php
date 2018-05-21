@@ -1,5 +1,7 @@
 <?php
 
+require('mysql_helper.php');
+
 function formatCost ($value) {
     return number_format(ceil($value), 0, '', ' ');
 }

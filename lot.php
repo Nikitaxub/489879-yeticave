@@ -19,12 +19,12 @@ $betsList = getBetList($connection, $lot_id);
 
 $headerContent = renderTemplate('templates/header-common.php', ['user_avatar' => $user_avatar, 'user_name' => $user_name,
     'is_auth' => $is_auth]);
-$nav_content = renderTemplate('templates/nav-items.php', []);
-$mainContent = renderTemplate('templates/lot.php', ['lot' => $lot[0], 'betsList' => $betsList, 'nav_content' => $nav_content]);
-$footerContent = renderTemplate('templates/footer-common.php', ['itemList' => $itemList]);
+$navContent = renderTemplate('templates/nav-items.php', []);
+$mainContent = renderTemplate('templates/lot.php', ['lot' => $lot[0], 'betsList' => $betsList, 'navContent' => $navContent]);
+$footerContent = renderTemplate('templates/footerCommon.php', ['itemList' => $itemList]);
 
-$layoutContent = renderTemplate('templates/layout.php', ['header_content' => $headerContent, 'main_content' => $mainContent,
-    'footer_content' => $footerContent, 'title' => $lot[0]['name'], 'main_class' => '']);
+$layoutContent = renderTemplate('templates/layout.php', ['headerContent' => $headerContent, 'mainContent' => $mainContent,
+    'footerContent' => $footerContent, 'title' => $lot[0]['name'], 'mainClass' => '']);
 
 echo $layoutContent;
 

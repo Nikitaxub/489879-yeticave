@@ -9,15 +9,15 @@
 <body>
 
 <header class="main-header">
-    <?= $header_content; ?>
+    <?= $headerContent; ?>
 </header>
 
-<main <?= $main_class; ?>>
-    <?= $main_content; ?>
+<main <?= $mainClass; ?>>
+    <?= $mainContent; ?>
 </main>
 
 <footer class="main-footer">
-    <?= $footer_content; ?>
+    <?= $footerContent; ?>
 </footer>
 
 </body>
