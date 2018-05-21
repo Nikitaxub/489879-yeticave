@@ -3,8 +3,7 @@
 require('functions.php');
 require('data.php');
 
-$headerContent = renderTemplate('templates/header-common.php', ['user_avatar' => $user_avatar, 'user_name' => $user_name,
-    'is_auth' => $is_auth]);
+$headerContent = renderTemplate('templates/header-common.php', []);
 $footerContent = renderTemplate('templates/footer-common.php', ['itemList' => $itemList]);
 
 $imagePath = '';
@@ -14,11 +13,10 @@ array_unshift ($itemList, ['id' => 0, 'name' => 'Выберите категор
 $errors = [];
 
 $lotImageMIMETypes = ['image/jpeg', 'image/pjpeg', 'image/png', 'image/webp'];
+$requiredFields = ['name', 'category_id', 'description', 'initial_price', 'bet_increment', 'close_date'];
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST' and isset($_POST['newLot'])) {
     $lot = $_POST['newLot'];
-
-    $requiredFields = ['name', 'category_id', 'description', 'initial_price', 'bet_increment', 'close_date'];
 
     foreach ($requiredFields as $field) {
         if (empty($lot[$field])) {

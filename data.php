@@ -1,10 +1,5 @@
 <?php
 
-$is_auth = (bool) rand(0, 1);
-
-$user_name = 'Константин';
-$user_avatar = 'img/user.jpg';
-
 $db_name = 'yeti_cave';
 $db_host = 'localhost';
 $db_user = 'root';
