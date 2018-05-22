@@ -13,7 +13,7 @@ $errors = [];
 $lotImageMIMETypes = ['image/jpeg', 'image/pjpeg', 'image/png', 'image/webp'];
 $requiredFields = ['email', 'name', 'password', 'contacts'];
 
-if ($_SERVER['REQUEST_METHOD'] == 'POST' and isset($_POST['user'])) {
+if (isPost('user')) {
     $user = $_POST['user'];
 
     foreach ($requiredFields as $field) {
@@ -38,22 +38,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' and isset($_POST['user'])) {
     if (empty($errors['email'])) {
         if (!filter_var($user['email'], FILTER_VALIDATE_EMAIL)) {
             $errors['email'] = 'Email должен быть корректным';
-        } elseif (!empty(checkResult($connection, "select * from users where email = '$user[email]'"))) {
+        } elseif (!empty(isUsedEmail($connection, $user['email']))) {
             $errors['email'] = 'Этот email уже используется';
         }
     }
 
-    if (isset($_FILES['avatar'])) {
-        $fileSize = $_FILES['avatar']['size'];
-        if ($fileSize > 0) {
-            $finfo = finfo_open(FILEINFO_MIME_TYPE);
-            $fileName = $_FILES['avatar']['tmp_name'];
-            $fileType = finfo_file($finfo, $fileName);
-            if (!in_array($fileType, $lotImageMIMETypes)) {
-                $errors['avatar'] = 'Это не картинка';
-            }
-            finfo_close($finfo);
+    if (isset($_FILES['avatar']) and $fileSize = $_FILES['avatar']['size'] > 0 ) {
+        $finfo = finfo_open(FILEINFO_MIME_TYPE);
+        $fileName = $_FILES['avatar']['tmp_name'];
+        $fileType = finfo_file($finfo, $fileName);
+        if (!in_array($fileType, $lotImageMIMETypes)) {
+            $errors['avatar'] = 'Это не картинка';
         }
+        finfo_close($finfo);
     }
 
     if (!empty($errors)) {
@@ -69,11 +66,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' and isset($_POST['user'])) {
         }
         $sql = 'insert into users (name, email, password_hash, avatar, contacts) values (?,?,?,?,?)';
         $data = [$user['name'], $user['email'], password_hash($user['password'],  PASSWORD_DEFAULT), $imagePath, $user['contacts']];
-        $stmt = db_get_prepare_stmt($connection, $sql, $data);
-
-        mysqli_stmt_execute($stmt);
-
-        mysqli_stmt_close($stmt);
+        db_execute_stmt ($connection, $sql, $data);
 
         header("Location: index.php");
     }

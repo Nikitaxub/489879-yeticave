@@ -151,6 +151,25 @@ function getBetList($connection, $lot_id) {
 function redirect404() {
     header("Location: 404.php");
 }
+
+function isPost($postArray) {
+    if ($_SERVER['REQUEST_METHOD'] == 'POST' and isset($_POST[$postArray])) {
+        return true;
+    }
+    return false;
+}
+
+function db_execute_stmt ($connection, $sql, $data) {
+    $stmt = db_get_prepare_stmt($connection, $sql, $data);
+
+    mysqli_stmt_execute($stmt);
+
+    mysqli_stmt_close($stmt);
+}
+
+function isUsedEmail($connection, $email) {
+    return checkResult($connection, "select * from users where email = '$email'");
+}
 ?>
 
 
