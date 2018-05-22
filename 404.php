@@ -3,8 +3,7 @@
 require('functions.php');
 require('data.php');
 
-$headerContent = renderTemplate('templates/header-common.php', ['user_avatar' => $user_avatar, 'user_name' => $user_name,
-    'is_auth' => $is_auth]);
+$headerContent = renderTemplate('templates/header-common.php', []);
 $mainContent = '<h1>Страница не найдена!</h1>';
 $footerContent = renderTemplate('templates/footer-common.php', ['itemList' => $itemList]);
 
