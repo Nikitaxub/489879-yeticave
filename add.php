@@ -70,9 +70,8 @@ if (isPost('newLot')) {
     } else {
         $imagePath = 'img/' . uniqid('', TRUE) . '.' . pathinfo($_FILES['lot_image']['name'])['extension'];
         move_uploaded_file($_FILES['lot_image']['tmp_name'], $imagePath);
-        $sql = 'insert into lots (name, category_id, description, initial_price, bet_increment, close_date, image) values (?,?,?,?,?,?,?)';
         $data = [$lot['name'], $lot['category_id'], $lot['description'], $lot['initial_price'], $lot['bet_increment'], $lot['close_date'], $imagePath];
-        db_execute_stmt ($connection, $sql, $data);
+        dbInsertLot($connection, $data);
 
         $new_lot_id = mysqli_insert_id($connection);
         header("Location: lot.php?lot_id=$new_lot_id");

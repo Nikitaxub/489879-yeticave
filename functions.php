@@ -167,6 +167,16 @@ function db_execute_stmt ($connection, $sql, $data) {
     mysqli_stmt_close($stmt);
 }
 
+function dbInsertUser($connection, $data) {
+    $sql = 'insert into users (name, email, password_hash, avatar, contacts) values (?,?,?,?,?)';
+    db_execute_stmt ($connection, $sql, $data);
+}
+
+function dbInsertLot($connection, $data) {
+    $sql = 'insert into lots (name, category_id, description, initial_price, bet_increment, close_date, image) values (?,?,?,?,?,?,?)';
+    db_execute_stmt ($connection, $sql, $data);
+}
+
 function isUsedEmail($connection, $email) {
     return checkResult($connection, "select * from users where email = '$email'");
 }

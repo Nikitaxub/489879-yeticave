@@ -64,9 +64,8 @@ if (isPost('user')) {
             $imagePath = 'img/' . uniqid('', TRUE) . '.' . pathinfo($_FILES['avatar']['name'])['extension'];
             move_uploaded_file($_FILES['avatar']['tmp_name'], $imagePath);
         }
-        $sql = 'insert into users (name, email, password_hash, avatar, contacts) values (?,?,?,?,?)';
         $data = [$user['name'], $user['email'], password_hash($user['password'],  PASSWORD_DEFAULT), $imagePath, $user['contacts']];
-        db_execute_stmt ($connection, $sql, $data);
+        dbInsertUser($connection, $data);
 
         header("Location: index.php");
     }
