@@ -151,6 +151,35 @@ function getBetList($connection, $lot_id) {
 function redirect404() {
     header("Location: 404.php");
 }
+
+function isPost($postArray) {
+    if ($_SERVER['REQUEST_METHOD'] == 'POST' and isset($_POST[$postArray])) {
+        return true;
+    }
+    return false;
+}
+
+function db_execute_stmt ($connection, $sql, $data) {
+    $stmt = db_get_prepare_stmt($connection, $sql, $data);
+
+    mysqli_stmt_execute($stmt);
+
+    mysqli_stmt_close($stmt);
+}
+
+function dbInsertUser($connection, $data) {
+    $sql = 'insert into users (name, email, password_hash, avatar, contacts) values (?,?,?,?,?)';
+    db_execute_stmt ($connection, $sql, $data);
+}
+
+function dbInsertLot($connection, $data) {
+    $sql = 'insert into lots (name, category_id, description, initial_price, bet_increment, close_date, image) values (?,?,?,?,?,?,?)';
+    db_execute_stmt ($connection, $sql, $data);
+}
+
+function isUsedEmail($connection, $email) {
+    return checkResult($connection, "select * from users where email = '$email'");
+}
 ?>
 
 

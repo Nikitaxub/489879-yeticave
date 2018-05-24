@@ -3,7 +3,8 @@
 require('functions.php');
 require('data.php');
 
-$headerContent = renderTemplate('templates/header-common.php', []);
+$headerContent = renderTemplate('templates/header-common.php', ['user_avatar' => $user_avatar, 'user_name' => $user_name,
+    'is_auth' => $is_auth]);
 $footerContent = renderTemplate('templates/footer-common.php', ['itemList' => $itemList]);
 
 $imagePath = '';
@@ -13,10 +14,11 @@ array_unshift ($itemList, ['id' => 0, 'name' => 'Выберите категор
 $errors = [];
 
 $lotImageMIMETypes = ['image/jpeg', 'image/pjpeg', 'image/png', 'image/webp'];
-$requiredFields = ['name', 'category_id', 'description', 'initial_price', 'bet_increment', 'close_date'];
 
-if (isPost('newLot')) {
+if ($_SERVER['REQUEST_METHOD'] == 'POST' and isset($_POST['newLot'])) {
     $lot = $_POST['newLot'];
+
+    $requiredFields = ['name', 'category_id', 'description', 'initial_price', 'bet_increment', 'close_date'];
 
     foreach ($requiredFields as $field) {
         if (empty($lot[$field])) {
@@ -70,8 +72,13 @@ if (isPost('newLot')) {
     } else {
         $imagePath = 'img/' . uniqid('', TRUE) . '.' . pathinfo($_FILES['lot_image']['name'])['extension'];
         move_uploaded_file($_FILES['lot_image']['tmp_name'], $imagePath);
+        $sql = 'insert into lots (name, category_id, description, initial_price, bet_increment, close_date, image) values (?,?,?,?,?,?,?)';
         $data = [$lot['name'], $lot['category_id'], $lot['description'], $lot['initial_price'], $lot['bet_increment'], $lot['close_date'], $imagePath];
-        dbInsertLot($connection, $data);
+        $stmt = db_get_prepare_stmt($connection, $sql, $data);
+
+        mysqli_stmt_execute($stmt);
+
+        mysqli_stmt_close($stmt);
 
         $new_lot_id = mysqli_insert_id($connection);
         header("Location: lot.php?lot_id=$new_lot_id");
