@@ -71,7 +71,7 @@ if (isPost('user')) {
     }
 } else {
     $navContent = renderTemplate('templates/nav-items.php', []);
-    $mainContent = renderTemplate('templates/sign-up.php', ['navContent' => $navContent, 'itemList' => $itemList, 'form_error_class' => '',
+    $mainContent = renderTemplate('templates/sign-up.php', ['navContent' => $navContent, 'form_error_class' => '',
         'user' => ['name' => '', 'email' => '', 'password' => '', 'contacts' => '']]);
     $layoutContent = renderTemplate('templates/layout.php', ['headerContent' => $headerContent, 'mainContent' => $mainContent,
         'footerContent' => $footerContent, 'title' => 'Регистрация', 'mainClass' => '']);

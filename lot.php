@@ -1,21 +1,22 @@
 <?php
 
+session_start();
 require('functions.php');
 require('data.php');
 
 if (ctype_digit($_GET['lot_id'])) {
-    $lot_id = intval($_GET['lot_id']);
+    $lotId = intval($_GET['lot_id']);
 } else {
     redirect404();
 }
 
-$lot = getLot($connection, $lot_id);
+$lot = getLot($connection, $lotId);
 
 if (!$lot[0]) {
     redirect404();
 }
 
-$betsList = getBetList($connection, $lot_id);
+$betsList = getBetList($connection, $lotId);
 
 $headerContent = renderTemplate('templates/header-common.php', []);
 $navContent = renderTemplate('templates/nav-items.php', []);
