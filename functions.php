@@ -105,17 +105,17 @@ function getItemList($connection) {
 }
 
 function checkResult($connection, $sql) {
-    $mysqli_result = mysqli_query($connection, $sql);
-    if ($mysqli_result === false) {
+    $mysqliResult = mysqli_query($connection, $sql);
+    if ($mysqliResult === false) {
         $error = mysqli_error($connection);
         print('Ошибка MySQL: '. $error);
         die();
     }
-    $rows = mysqli_fetch_all($mysqli_result, MYSQLI_ASSOC );
+    $rows = mysqli_fetch_all($mysqliResult, MYSQLI_ASSOC );
     return $rows;
 }
 
-function getLot($connection, $lot_id) {
+function getLot($connection, $lotId) {
     $sql = "select 
     l.name, 
     l.image,
@@ -130,19 +130,19 @@ function getLot($connection, $lot_id) {
     l.close_date
     from lots l
     join categories c on l.category_id = c.id
-    where l.id = $lot_id";
+    where l.id = $lotId";
 
     return checkResult($connection, $sql);
 }
 
-function getBetList($connection, $lot_id) {
+function getBetList($connection, $lotId) {
     $sql = "select
     b.create_date,
     b.price,
     u.name 'user_name'
     from bets b
     join users u on b.user_id = u.id
-    where b.lot_id = $lot_id
+    where b.lot_id = $lotId
     order by b.price desc";
 
     return checkResult($connection, $sql);
@@ -152,6 +152,10 @@ function redirect404() {
     header("Location: 404.php");
 }
 
+function redirect403() {
+    header("Location: 403.php");
+}
+
 function isPost($postArray) {
     if ($_SERVER['REQUEST_METHOD'] == 'POST' and isset($_POST[$postArray])) {
         return true;
@@ -159,7 +163,7 @@ function isPost($postArray) {
     return false;
 }
 
-function db_execute_stmt ($connection, $sql, $data) {
+function dbExecuteStmt ($connection, $sql, $data) {
     $stmt = db_get_prepare_stmt($connection, $sql, $data);
 
     mysqli_stmt_execute($stmt);
@@ -169,16 +173,41 @@ function db_execute_stmt ($connection, $sql, $data) {
 
 function dbInsertUser($connection, $data) {
     $sql = 'insert into users (name, email, password_hash, avatar, contacts) values (?,?,?,?,?)';
-    db_execute_stmt ($connection, $sql, $data);
+    dbExecuteStmt ($connection, $sql, $data);
 }
 
 function dbInsertLot($connection, $data) {
     $sql = 'insert into lots (name, category_id, description, initial_price, bet_increment, close_date, image) values (?,?,?,?,?,?,?)';
-    db_execute_stmt ($connection, $sql, $data);
+    dbExecuteStmt ($connection, $sql, $data);
 }
 
 function isUsedEmail($connection, $email) {
     return checkResult($connection, "select * from users where email = '$email'");
+}
+
+function checkAuth($connection, $email, $password) {
+    $passworHash = checkResult($connection, "select password_hash from users where email = '{$email}' limit 1");
+    if (isset($passworHash[0]) && password_verify($password, $passworHash[0]['password_hash'])) {
+        if (password_needs_rehash($passworHash[0]['password_hash'], PASSWORD_DEFAULT)) {
+            $newHash = password_hash($password, PASSWORD_DEFAULT);
+            dbExecuteStmt ($connection, 'update users set password_hash = ? where email = ?', [$newHash, $email]);
+        }
+        return true;
+    }
+    return false;
+}
+
+function getUser($connection, $email) {
+    $sql = "select email, name, avatar, contacts from users where email = '{$email}' limit 1";
+
+    return checkResult($connection, $sql);
+}
+
+function isAuthorized() {
+    if (isset($_SESSION['login']['email'])) {
+        return true;
+    }
+    return false;
 }
 ?>
 

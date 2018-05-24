@@ -12,3 +12,5 @@ $lotsLimit = 9;
 $itemList = getItemList($connection);
 
 $lotsList = getLotsList($connection, $lotsLimit);
+
+session_start();

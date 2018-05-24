@@ -3,7 +3,13 @@
 require('functions.php');
 require('data.php');
 
-$headerContent = renderTemplate('templates/header-common.php', []);
+http_response_code(404);
+
+if (!isAuthorized()) {
+    $_SESSION['login'] = [];
+}
+
+$headerContent = renderTemplate('templates/header-common.php', ['login' => $_SESSION['login']]);
 $mainContent = '<h1>Страница не найдена!</h1>';
 $footerContent = renderTemplate('templates/footer-common.php', ['itemList' => $itemList]);
 

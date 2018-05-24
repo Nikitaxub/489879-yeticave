@@ -3,7 +3,11 @@
 require('functions.php');
 require('data.php');
 
-$headerContent = renderTemplate('templates/header-common.php', []);
+if (!isAuthorized()) {
+    redirect403();
+}
+
+$headerContent = renderTemplate('templates/header-common.php', ['login' => $_SESSION['login']]);
 $footerContent = renderTemplate('templates/footer-common.php', ['itemList' => $itemList]);
 
 $imagePath = '';
@@ -54,13 +58,6 @@ if (isPost('newLot')) {
     }
 
     if (!empty($errors)) {
-        foreach ($itemList as $key => $item) {
-            if($item['id'] === $lot['category_id']) {
-                $itemList[$key]['isSelected'] = 'selected';
-            } else {
-                $itemList[$key]['isSelected'] = '';
-            }
-        }
 
         $navContent = renderTemplate('templates/nav-items.php', []);
         $mainContent = renderTemplate('templates/add-lot.php', ['navContent' => $navContent, 'itemList' => $itemList,
@@ -73,8 +70,8 @@ if (isPost('newLot')) {
         $data = [$lot['name'], $lot['category_id'], $lot['description'], $lot['initial_price'], $lot['bet_increment'], $lot['close_date'], $imagePath];
         dbInsertLot($connection, $data);
 
-        $new_lot_id = mysqli_insert_id($connection);
-        header("Location: lot.php?lot_id=$new_lot_id");
+        $newLotId = mysqli_insert_id($connection);
+        header("Location: lot.php?lot_id=$newLotId");
     }
 } else {
     $navContent = renderTemplate('templates/nav-items.php', []);

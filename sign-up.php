@@ -3,7 +3,11 @@
 require('functions.php');
 require('data.php');
 
-$headerContent = renderTemplate('templates/header-common.php', []);
+if (!isAuthorized()) {
+    $_SESSION['login'] = [];
+}
+
+$headerContent = renderTemplate('templates/header-common.php', ['login' => $_SESSION['login']]);
 $footerContent = renderTemplate('templates/footer-common.php', ['itemList' => $itemList]);
 
 $imagePath = '';
@@ -71,7 +75,7 @@ if (isPost('user')) {
     }
 } else {
     $navContent = renderTemplate('templates/nav-items.php', []);
-    $mainContent = renderTemplate('templates/sign-up.php', ['navContent' => $navContent, 'itemList' => $itemList, 'form_error_class' => '',
+    $mainContent = renderTemplate('templates/sign-up.php', ['navContent' => $navContent, 'form_error_class' => '',
         'user' => ['name' => '', 'email' => '', 'password' => '', 'contacts' => '']]);
     $layoutContent = renderTemplate('templates/layout.php', ['headerContent' => $headerContent, 'mainContent' => $mainContent,
         'footerContent' => $footerContent, 'title' => 'Регистрация', 'mainClass' => '']);
