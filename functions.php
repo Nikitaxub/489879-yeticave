@@ -186,18 +186,28 @@ function isUsedEmail($connection, $email) {
 }
 
 function checkAuth($connection, $email, $password) {
-    $password_hash = checkResult($connection, "select password_hash from users where email = '$email' limit 1");
-
-    if (isset($password_hash[0]) && password_verify($password, $password_hash[0]['password_hash'])) {
+    $passworHash = checkResult($connection, "select password_hash from users where email = '{$email}' limit 1");
+    if (isset($passworHash[0]) && password_verify($password, $passworHash[0]['password_hash'])) {
+        if (password_needs_rehash($passworHash[0]['password_hash'], PASSWORD_DEFAULT)) {
+            $newHash = password_hash($password, PASSWORD_DEFAULT);
+            dbExecuteStmt ($connection, 'update users set password_hash = ? where email = ?', [$newHash, $email]);
+        }
         return true;
     }
     return false;
 }
 
 function getUser($connection, $email) {
-    $sql = "select name, avatar from users where email = '$email' limit 1";
+    $sql = "select email, name, avatar, contacts from users where email = '{$email}' limit 1";
 
     return checkResult($connection, $sql);
+}
+
+function isAuthorized() {
+    if (isset($_SESSION['login']['email'])) {
+        return true;
+    }
+    return false;
 }
 ?>
 

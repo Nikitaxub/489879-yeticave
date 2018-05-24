@@ -7,13 +7,13 @@
         <input type="search" name="search" placeholder="Поиск лота">
         <input class="main-header__search-btn" type="submit" name="find" value="Найти">
     </form>
-    <?php if (isset($_SESSION['email'])): ?>
+    <?php if (isset($login['email'])): ?>
         <a class="main-header__add-lot button" href="add.php">Добавить лот</a>
     <?php endif; ?>
 
     <nav class="user-menu">
         <ul class="user-menu__list">
-            <?php if (!isset($_SESSION['email'])): ?>
+            <?php if (!isset($login['email'])): ?>
                 <li class="user-menu__item">
                     <a href="sign-up.php">Регистрация</a>
                 </li>
@@ -22,10 +22,10 @@
                 </li>
             <?php else: ?>
                 <div class="user-menu__image">
-                    <img alt="oops" src="<?= $_SESSION['avatar']; ?>" width="40" height="40" alt="Пользователь">
+                    <img alt="oops" src="<?= $login['avatar']; ?>" width="40" height="40" alt="Пользователь">
                 </div>
                 <div class="user-menu__logged">
-                    <p><?= $_SESSION['name']; ?></p>
+                    <p><?= $login['name']; ?></p>
                     <a href="logout.php">Выйти</a>
                 </div>
             <?php endif; ?>

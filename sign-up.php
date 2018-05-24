@@ -3,7 +3,11 @@
 require('functions.php');
 require('data.php');
 
-$headerContent = renderTemplate('templates/header-common.php', []);
+if (!isAuthorized()) {
+    $_SESSION['login'] = [];
+}
+
+$headerContent = renderTemplate('templates/header-common.php', ['login' => $_SESSION['login']]);
 $footerContent = renderTemplate('templates/footer-common.php', ['itemList' => $itemList]);
 
 $imagePath = '';

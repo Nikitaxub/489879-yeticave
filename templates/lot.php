@@ -10,7 +10,7 @@
         <p class="lot-item__description"><?= htmlspecialchars($lot['description']); ?></p>
       </div>
       <div class="lot-item__right">
-          <?php if (isset($_SESSION['email'])): ?>
+          <?php if (isAuthorized()): ?>
             <div class="lot-item__state form__item--invalid">
               <div class="lot-item__timer timer">
                   <?= htmlspecialchars(getRemainingTime($lot['close_date'])); ?>

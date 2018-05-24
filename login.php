@@ -3,7 +3,11 @@
 require('functions.php');
 require('data.php');
 
-$headerContent = renderTemplate('templates/header-common.php', []);
+if (!isAuthorized()) {
+    $_SESSION['login'] = [];
+}
+
+$headerContent = renderTemplate('templates/header-common.php', ['login' => $_SESSION['login']]);
 $footerContent = renderTemplate('templates/footer-common.php', ['itemList' => $itemList]);
 
 $errors = [];
@@ -42,11 +46,8 @@ if (isPost('login')) {
         $layoutContent = renderTemplate('templates/layout.php', ['headerContent' => $headerContent, 'mainContent' => $mainContent,
             'footerContent' => $footerContent, 'title' => 'Вход', 'mainClass' => '']);
     } else {
-        session_start();
-        $_SESSION['email'] = $login['email'];
         $user = getUser($connection, $login['email']);
-        $_SESSION['name'] = $user[0]['name'];
-        $_SESSION['avatar'] = $user[0]['avatar'];
+        $_SESSION['login'] = $user[0];
         header("Location: index.php");
     }
 } else {

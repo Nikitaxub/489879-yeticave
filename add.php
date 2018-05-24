@@ -1,14 +1,13 @@
 <?php
 
-session_start();
 require('functions.php');
 require('data.php');
 
-if (!isset($_SESSION['email'])) {
+if (!isAuthorized()) {
     redirect403();
 }
 
-$headerContent = renderTemplate('templates/header-common.php', []);
+$headerContent = renderTemplate('templates/header-common.php', ['login' => $_SESSION['login']]);
 $footerContent = renderTemplate('templates/footer-common.php', ['itemList' => $itemList]);
 
 $imagePath = '';
