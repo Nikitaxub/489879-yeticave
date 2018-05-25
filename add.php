@@ -9,6 +9,7 @@ if (!isAuthorized()) {
 
 $headerContent = renderTemplate('templates/header-common.php', ['login' => $_SESSION['login']]);
 $footerContent = renderTemplate('templates/footer-common.php', ['itemList' => $itemList]);
+$navContent = renderTemplate('templates/nav-items.php', []);
 
 $imagePath = '';
 
@@ -58,30 +59,24 @@ if (isPost('newLot')) {
     }
 
     if (!empty($errors)) {
-
-        $navContent = renderTemplate('templates/nav-items.php', []);
         $mainContent = renderTemplate('templates/add-lot.php', ['navContent' => $navContent, 'itemList' => $itemList,
             'newLot' => $lot, 'form_error_class' => 'form--invalid', 'errors' => $errors]);
-        $layoutContent = renderTemplate('templates/layout.php', ['headerContent' => $headerContent, 'mainContent' => $mainContent,
-            'footerContent' => $footerContent, 'title' => 'Добавление лота', 'mainClass' => '']);
     } else {
         $imagePath = 'img/' . uniqid('', TRUE) . '.' . pathinfo($_FILES['lot_image']['name'])['extension'];
         move_uploaded_file($_FILES['lot_image']['tmp_name'], $imagePath);
-        $data = [$lot['name'], $lot['category_id'], $lot['description'], $lot['initial_price'], $lot['bet_increment'], $lot['close_date'], $imagePath];
+        $data = [$lot['name'], $lot['category_id'], $lot['description'], $lot['initial_price'], $lot['bet_increment'], $lot['close_date'], $imagePath, $_SESSION['login']['id']];
         dbInsertLot($connection, $data);
-
         $newLotId = mysqli_insert_id($connection);
         header("Location: lot.php?lot_id=$newLotId");
     }
 } else {
-    $navContent = renderTemplate('templates/nav-items.php', []);
     $mainContent = renderTemplate('templates/add-lot.php', ['navContent' => $navContent, 'itemList' => $itemList,
         'newLot' => ['name' => '', 'category_id' => 0, 'description' => '', 'initial_price' => '', 'bet_increment' => '',
             'close_date' => ''], 'form_error_class' => '']);
-    $layoutContent = renderTemplate('templates/layout.php', ['headerContent' => $headerContent, 'mainContent' => $mainContent,
-        'footerContent' => $footerContent, 'title' => 'Добавление лота', 'mainClass' => '']);
 }
 
+$layoutContent = renderTemplate('templates/layout.php', ['headerContent' => $headerContent, 'mainContent' => $mainContent,
+    'footerContent' => $footerContent, 'title' => 'Добавление лота', 'mainClass' => '']);
 echo $layoutContent;
 
 ?>

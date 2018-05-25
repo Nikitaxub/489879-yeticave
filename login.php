@@ -9,6 +9,7 @@ if (!isAuthorized()) {
 
 $headerContent = renderTemplate('templates/header-common.php', ['login' => $_SESSION['login']]);
 $footerContent = renderTemplate('templates/footer-common.php', ['itemList' => $itemList]);
+$navContent = renderTemplate('templates/nav-items.php', []);
 
 $errors = [];
 
@@ -40,24 +41,20 @@ if (isPost('login')) {
     }
 
     if (!empty($errors)) {
-        $navContent = renderTemplate('templates/nav-items.php', []);
         $mainContent = renderTemplate('templates/login.php', ['navContent' => $navContent,
-            'login' => $login, 'form_error_class' => 'form--invalid', 'errors' => $errors]);
-        $layoutContent = renderTemplate('templates/layout.php', ['headerContent' => $headerContent, 'mainContent' => $mainContent,
-            'footerContent' => $footerContent, 'title' => 'Вход', 'mainClass' => '']);
+            'login' => $login, 'errors' => $errors]);
     } else {
         $user = getUser($connection, $login['email']);
         $_SESSION['login'] = $user[0];
         header("Location: index.php");
     }
 } else {
-    $navContent = renderTemplate('templates/nav-items.php', []);
-    $mainContent = renderTemplate('templates/login.php', ['navContent' => $navContent, 'form_error_class' => '',
+    $mainContent = renderTemplate('templates/login.php', ['navContent' => $navContent,
         'login' => ['email' => '', 'password' => '']]);
-    $layoutContent = renderTemplate('templates/layout.php', ['headerContent' => $headerContent, 'mainContent' => $mainContent,
-        'footerContent' => $footerContent, 'title' => 'Вход', 'mainClass' => '']);
 }
 
+$layoutContent = renderTemplate('templates/layout.php', ['headerContent' => $headerContent, 'mainContent' => $mainContent,
+    'footerContent' => $footerContent, 'title' => 'Вход', 'mainClass' => '']);
 echo $layoutContent;
 
 ?>

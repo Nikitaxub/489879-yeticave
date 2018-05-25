@@ -127,7 +127,15 @@ function getLot($connection, $lotId) {
       else l.initial_price
     end 'min_bet',
     c.name 'category',
-    l.close_date
+    l.close_date,
+    (select a.email from users a where a.id = l.author_id) 'author',
+    ifnull((
+      select ulb.email 
+      from bets lb 
+      join users ulb on lb.user_id = ulb.id 
+      where l.id = lb.lot_id 
+      order by price desc, create_date desc 
+      limit 1), '') 'lastBet'
     from lots l
     join categories c on l.category_id = c.id
     where l.id = $lotId";
@@ -177,7 +185,7 @@ function dbInsertUser($connection, $data) {
 }
 
 function dbInsertLot($connection, $data) {
-    $sql = 'insert into lots (name, category_id, description, initial_price, bet_increment, close_date, image) values (?,?,?,?,?,?,?)';
+    $sql = 'insert into lots (name, category_id, description, initial_price, bet_increment, close_date, image, author_id) values (?,?,?,?,?,?,?,?)';
     dbExecuteStmt ($connection, $sql, $data);
 }
 
@@ -198,7 +206,7 @@ function checkAuth($connection, $email, $password) {
 }
 
 function getUser($connection, $email) {
-    $sql = "select email, name, avatar, contacts from users where email = '{$email}' limit 1";
+    $sql = "select email, name, avatar, contacts, id from users where email = '{$email}' limit 1";
 
     return checkResult($connection, $sql);
 }
@@ -208,6 +216,11 @@ function isAuthorized() {
         return true;
     }
     return false;
+}
+
+function dbInsertBet($connection, $data) {
+    $sql = 'insert into bets (price, user_id, lot_id) values (?,?,?)';
+    dbExecuteStmt ($connection, $sql, $data);
 }
 ?>
 

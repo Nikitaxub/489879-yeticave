@@ -21,14 +21,41 @@ if (!$lot[0]) {
 
 $betsList = getBetList($connection, $lotId);
 
+$errors = [];
+
 $headerContent = renderTemplate('templates/header-common.php', ['login' => $_SESSION['login']]);
+$footerContent = renderTemplate('templates/footer-common.php', ['itemList' => $itemList]);
 $navContent = renderTemplate('templates/nav-items.php', []);
-$mainContent = renderTemplate('templates/lot.php', ['lot' => $lot[0], 'betsList' => $betsList, 'navContent' => $navContent]);
-$footerContent = renderTemplate('templates/footerCommon.php', ['itemList' => $itemList]);
+
+if ($_SERVER['REQUEST_METHOD'] == 'POST' and isset($_POST['cost'])) {
+    $cost = $_POST['cost'];
+
+    if (empty($cost)) {
+        $errors['cost'] = 'Введите ставку';
+    }
+
+    $minBet = $lot[0]['min_bet'];
+    if (empty($errors['cost']) && $minBet > $cost) {
+        $formatCostMinBet = formatCost($minBet);
+        $errors['cost'] = "Ставка не может быть меньше $formatCostMinBet";
+    }
+
+    if (!empty($errors)) {
+        $mainContent = renderTemplate('templates/lot.php', ['navContent' => $navContent, 'lot' => $lot[0], 'betsList' => $betsList,
+            'cost' => $cost, 'form_error_class' => 'form--invalid', 'errors' => $errors]);
+    } else {
+        $data = [$cost, $_SESSION['login']['id'], $lotId];
+        dbInsertBet($connection, $data);
+        header("Location: lot.php?lot_id=$lotId");
+    }
+} else {
+    $mainContent = renderTemplate('templates/lot.php', ['navContent' => $navContent, 'lot' => $lot[0], 'betsList' => $betsList,
+        'form_error_class' => '']);
+}
 
 $layoutContent = renderTemplate('templates/layout.php', ['headerContent' => $headerContent, 'mainContent' => $mainContent,
     'footerContent' => $footerContent, 'title' => $lot[0]['name'], 'mainClass' => '']);
-
 echo $layoutContent;
 
 ?>
+

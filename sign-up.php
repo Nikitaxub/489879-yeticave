@@ -9,6 +9,7 @@ if (!isAuthorized()) {
 
 $headerContent = renderTemplate('templates/header-common.php', ['login' => $_SESSION['login']]);
 $footerContent = renderTemplate('templates/footer-common.php', ['itemList' => $itemList]);
+$navContent = renderTemplate('templates/nav-items.php', []);
 
 $imagePath = '';
 
@@ -58,11 +59,8 @@ if (isPost('user')) {
     }
 
     if (!empty($errors)) {
-        $navContent = renderTemplate('templates/nav-items.php', []);
         $mainContent = renderTemplate('templates/sign-up.php', ['navContent' => $navContent,
             'user' => $user, 'form_error_class' => 'form--invalid', 'errors' => $errors]);
-        $layoutContent = renderTemplate('templates/layout.php', ['headerContent' => $headerContent, 'mainContent' => $mainContent,
-            'footerContent' => $footerContent, 'title' => 'Регистрация', 'mainClass' => '']);
     } else {
         if ($fileSize > 0) {
             $imagePath = 'img/' . uniqid('', TRUE) . '.' . pathinfo($_FILES['avatar']['name'])['extension'];
@@ -74,13 +72,12 @@ if (isPost('user')) {
         header("Location: index.php");
     }
 } else {
-    $navContent = renderTemplate('templates/nav-items.php', []);
     $mainContent = renderTemplate('templates/sign-up.php', ['navContent' => $navContent, 'form_error_class' => '',
         'user' => ['name' => '', 'email' => '', 'password' => '', 'contacts' => '']]);
-    $layoutContent = renderTemplate('templates/layout.php', ['headerContent' => $headerContent, 'mainContent' => $mainContent,
-        'footerContent' => $footerContent, 'title' => 'Регистрация', 'mainClass' => '']);
 }
 
+$layoutContent = renderTemplate('templates/layout.php', ['headerContent' => $headerContent, 'mainContent' => $mainContent,
+    'footerContent' => $footerContent, 'title' => 'Регистрация', 'mainClass' => '']);
 echo $layoutContent;
 
 ?>
