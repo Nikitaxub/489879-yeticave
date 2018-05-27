@@ -42,7 +42,7 @@ if (isPost('bet')) {
     $minBet = $lot[0]['min_bet'];
     if (empty($errors['cost']) && $minBet > $bet['cost']) {
         $formatCostMinBet = ceil($minBet);
-        $errors['cost'] = "Ставка не может быть меньше $formatCostMinBet";
+        $errors['cost'] = "Ставка не может быть меньше {$formatCostMinBet}";
     }
 
     if (!empty($errors)) {

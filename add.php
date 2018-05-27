@@ -70,8 +70,7 @@ if (isPost('newLot')) {
             $errors['lot_image'] = 'Загрузите картинку в формате jpeg/png';
         }
     }
-if(date_create_from_format('d.m.Y', $lot['close_date'])) {echo 1;} else {echo 0;}
-echo date_create_from_format('d.m.Y', $lot['close_date']);
+
     if (!empty($errors)) {
         $mainContent = renderTemplate('templates/add-lot.php', ['navContent' => $navContent, 'itemList' => $itemList,
             'newLot' => $lot, 'form_error_class' => 'form--invalid', 'errors' => $errors]);
