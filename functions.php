@@ -40,32 +40,12 @@ function getPassingTime($time) {
     if (intdiv($passingTimeInSec, 86400) >= 1) {
         return date('d.m.y', strtotime($time)) . ' в ' . date('H:i', strtotime($time));
     }
-    return getNumEnding(intdiv($passingTimeInSec, 3600), array('час', 'часа', 'часов')) . ' ' .
-        getNumEnding(intdiv($passingTimeInSec % 3600, 60), array('минуту', 'минуты', 'минут')) . ' назад';
+    return intdiv($passingTimeInSec, 3600) . ' ' . getNumEnding(intdiv($passingTimeInSec, 3600), array('час', 'часа', 'часов')) . ' ' .
+        intdiv($passingTimeInSec % 3600, 60) . ' ' .getNumEnding(intdiv($passingTimeInSec % 3600, 60), array('минуту', 'минуты', 'минут')) . ' назад';
 }
 
-function getNumEnding($number, $endingArray)
-{
-    $returnValue = '';
-    $number = $number % 100;
-    if ($number>=10 && $number<=19) {
-        $returnValue = $number.' '.$endingArray[2];
-    } else {
-        $i = $number % 10;
-        switch ($i)
-        {
-            case (0): $returnValue = ''; break;
-            case (1): $returnValue = $number.' '.$endingArray[0]; break;
-            case (2):
-            case (3):
-            case (4): $returnValue = $number.' '.$endingArray[1]; break;
-            default: $returnValue = $number.' '.$endingArray[2];
-        }
-    }
-    if ($returnValue == '' && $endingArray == ['минуту', 'минуты', 'минут']) {
-        $returnValue = '0 минут';
-    }
-    return $returnValue;
+function getNumEnding($n, $forms) {
+    return $n%10==1&&$n%100!=11?$forms[0]:($n%10>=2&&$n%10<=4&&($n%100<10||$n%100>=20)?$forms[1]:$forms[2]);
 }
 
 function connectDB($host, $user, $password, $db) {
