@@ -7,15 +7,19 @@ if (!isAuthorized()) {
     $_SESSION['login'] = [];
 }
 
-$headerContent = renderTemplate('templates/header-common.php', ['login' => $_SESSION['login']]);
+$session = getSession();
+
+$headerContent = renderTemplate('templates/header-common.php', ['login' => $session]);
 $footerContent = renderTemplate('templates/footer-common.php', ['itemList' => $itemList]);
 $navContent = renderTemplate('templates/nav-items.php', []);
+$mainContent = '';
 
-$errors = [];
-
-$lotImageMIMETypes = ['image/jpeg', 'image/pjpeg', 'image/png', 'image/webp'];
+$lotImageMIMETypes = ['image/jpeg', 'image/pjpeg', 'image/png'];
 $requiredFields = ['email', 'password'];
 
+$login = [];
+$errors = [];
+$user = [];
 if (isPost('login')) {
     $login = $_POST['login'];
 
@@ -37,7 +41,7 @@ if (isPost('login')) {
     }
 
     if (empty($errors['password']) && !checkAuth($connection, $login['email'], $login['password'])) {
-        $errors['password'] = 'Вы ввели неверный пароль';
+        $errors['password'] = 'Вы ввели неверный email/пароль';
     }
 
     if (!empty($errors)) {
@@ -56,5 +60,3 @@ if (isPost('login')) {
 $layoutContent = renderTemplate('templates/layout.php', ['headerContent' => $headerContent, 'mainContent' => $mainContent,
     'footerContent' => $footerContent, 'title' => 'Вход', 'mainClass' => '']);
 echo $layoutContent;
-
-?>

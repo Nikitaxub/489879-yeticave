@@ -7,17 +7,23 @@ if (!isAuthorized()) {
     $_SESSION['login'] = [];
 }
 
-$headerContent = renderTemplate('templates/header-common.php', ['login' => $_SESSION['login']]);
+$session = getSession();
+
+$headerContent = renderTemplate('templates/header-common.php', ['login' => $session]);
 $footerContent = renderTemplate('templates/footer-common.php', ['itemList' => $itemList]);
 $navContent = renderTemplate('templates/nav-items.php', []);
+$mainContent = '';
 
-$imagePath = '';
-
-$errors = [];
-
-$lotImageMIMETypes = ['image/jpeg', 'image/pjpeg', 'image/png', 'image/webp'];
+$lotImageMIMETypes = ['image/jpeg', 'image/pjpeg', 'image/png'];
 $requiredFields = ['email', 'name', 'password', 'contacts'];
 
+$errors = [];
+$user = [];
+$finfo = '';
+$fileName = '';
+$fileType = '';
+$imagePath = '';
+$data = [];
 if (isPost('user')) {
     $user = $_POST['user'];
 
@@ -69,7 +75,7 @@ if (isPost('user')) {
         $data = [$user['name'], $user['email'], password_hash($user['password'],  PASSWORD_DEFAULT), $imagePath, $user['contacts']];
         dbInsertUser($connection, $data);
 
-        header("Location: index.php");
+        header("Location: login.php");
     }
 } else {
     $mainContent = renderTemplate('templates/sign-up.php', ['navContent' => $navContent, 'form_error_class' => '',
@@ -79,5 +85,3 @@ if (isPost('user')) {
 $layoutContent = renderTemplate('templates/layout.php', ['headerContent' => $headerContent, 'mainContent' => $mainContent,
     'footerContent' => $footerContent, 'title' => 'Регистрация', 'mainClass' => '']);
 echo $layoutContent;
-
-?>

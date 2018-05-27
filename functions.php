@@ -37,18 +37,18 @@ function getPassingTime($time) {
     date_default_timezone_set('Europe/Moscow');
     $passingTimeInSec = time() - strtotime($time);
 
-    if (intdiv($passingTimeInSec, 86400) > 1) {
+    if (intdiv($passingTimeInSec, 86400) >= 1) {
         return date('d.m.y', strtotime($time)) . ' в ' . date('H:i', strtotime($time));
     }
-    return $returnValue = getNumEnding(intdiv($passingTimeInSec, 3600), array('час', 'часа', 'часов')) . ' ' .
-        getNumEnding(intdiv($passingTimeInSec % 3600, 60), array('минута', 'минуты', 'минут')) . ' назад';
-
+    return getNumEnding(intdiv($passingTimeInSec, 3600), array('час', 'часа', 'часов')) . ' ' .
+        getNumEnding(intdiv($passingTimeInSec % 3600, 60), array('минуту', 'минуты', 'минут')) . ' назад';
 }
 
 function getNumEnding($number, $endingArray)
 {
+    $returnValue = '';
     $number = $number % 100;
-    if ($number>=11 && $number<=19) {
+    if ($number>=10 && $number<=19) {
         $returnValue = $number.' '.$endingArray[2];
     } else {
         $i = $number % 10;
@@ -61,6 +61,9 @@ function getNumEnding($number, $endingArray)
             case (4): $returnValue = $number.' '.$endingArray[1]; break;
             default: $returnValue = $number.' '.$endingArray[2];
         }
+    }
+    if ($returnValue == '' && $endingArray == ['минуту', 'минуты', 'минут']) {
+        $returnValue = '0 минут';
     }
     return $returnValue;
 }
@@ -106,6 +109,7 @@ function getItemList($connection) {
 
 function checkResult($connection, $sql) {
     $mysqliResult = mysqli_query($connection, $sql);
+    $error = '';
     if ($mysqliResult === false) {
         $error = mysqli_error($connection);
         print('Ошибка MySQL: '. $error);
@@ -181,11 +185,13 @@ function dbExecuteStmt ($connection, $sql, $data) {
 
 function dbInsertUser($connection, $data) {
     $sql = 'insert into users (name, email, password_hash, avatar, contacts) values (?,?,?,?,?)';
+
     dbExecuteStmt ($connection, $sql, $data);
 }
 
 function dbInsertLot($connection, $data) {
     $sql = 'insert into lots (name, category_id, description, initial_price, bet_increment, close_date, image, author_id) values (?,?,?,?,?,?,?,?)';
+
     dbExecuteStmt ($connection, $sql, $data);
 }
 
@@ -195,6 +201,7 @@ function isUsedEmail($connection, $email) {
 
 function checkAuth($connection, $email, $password) {
     $passworHash = checkResult($connection, "select password_hash from users where email = '{$email}' limit 1");
+    $newHash = '';
     if (isset($passworHash[0]) && password_verify($password, $passworHash[0]['password_hash'])) {
         if (password_needs_rehash($passworHash[0]['password_hash'], PASSWORD_DEFAULT)) {
             $newHash = password_hash($password, PASSWORD_DEFAULT);
@@ -212,7 +219,8 @@ function getUser($connection, $email) {
 }
 
 function isAuthorized() {
-    if (isset($_SESSION['login']['email'])) {
+    $session = getSession();
+    if (isset($session['email'])) {
         return true;
     }
     return false;
@@ -220,8 +228,13 @@ function isAuthorized() {
 
 function dbInsertBet($connection, $data) {
     $sql = 'insert into bets (price, user_id, lot_id) values (?,?,?)';
+
     dbExecuteStmt ($connection, $sql, $data);
 }
-?>
 
-
+function getSession() {
+    if (isset($_SESSION['login'])) {
+        return $_SESSION['login'];
+    };
+    return [];
+}

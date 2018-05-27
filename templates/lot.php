@@ -10,7 +10,8 @@
         <p class="lot-item__description"><?= htmlspecialchars($lot['description']); ?></p>
       </div>
       <div class="lot-item__right">
-          <?php if (isAuthorized() && ($lot['author'] !== $_SESSION['login']['email']) && ($lot['lastBet'] !== $_SESSION['login']['email'])): ?>
+          <?php if (isAuthorized() && ($lot['author'] !== $session['email']) &&
+              $lot['lastBet'] !== $session['email'] && strtotime($lot['close_date']) > strtotime('today')): ?>
             <div class="lot-item__state <?php if ($errors['cost']) {echo 'form__item--invalid';} ?>">
               <div class="lot-item__timer timer">
                   <?= htmlspecialchars(getRemainingTime($lot['close_date'])); ?>
@@ -27,7 +28,7 @@
                 <form class="lot-item__form" action="" method="post">
                         <div class="form__item lot-item__form-item">
                                 <label for="cost">Ваша ставка</label>
-                                <input id="cost" type="number" name="cost" value="<?= ceil(htmlspecialchars($lot['min_bet'])); ?>">
+                                <input id="cost" type="number" name="bet[cost]" value="<?= ceil(htmlspecialchars($lot['min_bet'])); ?>">
                             <span class="form__error"><?= $errors['cost']; ?></span>
                         </div>
                         <button type="submit" class="button">Сделать ставку</button>
