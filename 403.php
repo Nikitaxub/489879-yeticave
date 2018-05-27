@@ -17,5 +17,3 @@ $layoutContent = renderTemplate('templates/layout.php', ['headerContent' => $hea
     'footerContent' => $footerContent, 'title' => 'Акцион YetiCave', 'mainClass' => ' class="container"']);
 
 echo $layoutContent;
-
-?>

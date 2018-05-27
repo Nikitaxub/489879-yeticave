@@ -7,14 +7,19 @@ if (!isAuthorized()) {
     $_SESSION['login'] = [];
 }
 
-$headerContent = renderTemplate('templates/header-common.php', ['login' => $_SESSION['login']]);
+$session = getSession();
+
+$headerContent = renderTemplate('templates/header-common.php', ['login' => $session]);
 $footerContent = renderTemplate('templates/footer-common.php', ['itemList' => $itemList]);
+$navContent = renderTemplate('templates/nav-items.php', []);
+$mainContent = '';
 
-$errors = [];
-
-$lotImageMIMETypes = ['image/jpeg', 'image/pjpeg', 'image/png', 'image/webp'];
+$lotImageMIMETypes = ['image/jpeg', 'image/pjpeg', 'image/png'];
 $requiredFields = ['email', 'password'];
 
+$login = [];
+$errors = [];
+$user = [];
 if (isPost('login')) {
     $login = $_POST['login'];
 
@@ -36,28 +41,22 @@ if (isPost('login')) {
     }
 
     if (empty($errors['password']) && !checkAuth($connection, $login['email'], $login['password'])) {
-        $errors['password'] = 'Вы ввели неверный пароль';
+        $errors['password'] = 'Вы ввели неверный email/пароль';
     }
 
     if (!empty($errors)) {
-        $navContent = renderTemplate('templates/nav-items.php', []);
         $mainContent = renderTemplate('templates/login.php', ['navContent' => $navContent,
-            'login' => $login, 'form_error_class' => 'form--invalid', 'errors' => $errors]);
-        $layoutContent = renderTemplate('templates/layout.php', ['headerContent' => $headerContent, 'mainContent' => $mainContent,
-            'footerContent' => $footerContent, 'title' => 'Вход', 'mainClass' => '']);
+            'login' => $login, 'errors' => $errors]);
     } else {
         $user = getUser($connection, $login['email']);
         $_SESSION['login'] = $user[0];
         header("Location: index.php");
     }
 } else {
-    $navContent = renderTemplate('templates/nav-items.php', []);
-    $mainContent = renderTemplate('templates/login.php', ['navContent' => $navContent, 'form_error_class' => '',
+    $mainContent = renderTemplate('templates/login.php', ['navContent' => $navContent,
         'login' => ['email' => '', 'password' => '']]);
-    $layoutContent = renderTemplate('templates/layout.php', ['headerContent' => $headerContent, 'mainContent' => $mainContent,
-        'footerContent' => $footerContent, 'title' => 'Вход', 'mainClass' => '']);
 }
 
+$layoutContent = renderTemplate('templates/layout.php', ['headerContent' => $headerContent, 'mainContent' => $mainContent,
+    'footerContent' => $footerContent, 'title' => 'Вход', 'mainClass' => '']);
 echo $layoutContent;
-
-?>

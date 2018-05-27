@@ -7,16 +7,23 @@ if (!isAuthorized()) {
     $_SESSION['login'] = [];
 }
 
-$headerContent = renderTemplate('templates/header-common.php', ['login' => $_SESSION['login']]);
+$session = getSession();
+
+$headerContent = renderTemplate('templates/header-common.php', ['login' => $session]);
 $footerContent = renderTemplate('templates/footer-common.php', ['itemList' => $itemList]);
+$navContent = renderTemplate('templates/nav-items.php', []);
+$mainContent = '';
 
-$imagePath = '';
-
-$errors = [];
-
-$lotImageMIMETypes = ['image/jpeg', 'image/pjpeg', 'image/png', 'image/webp'];
+$lotImageMIMETypes = ['image/jpeg', 'image/pjpeg', 'image/png'];
 $requiredFields = ['email', 'name', 'password', 'contacts'];
 
+$errors = [];
+$user = [];
+$finfo = '';
+$fileName = '';
+$fileType = '';
+$imagePath = '';
+$data = [];
 if (isPost('user')) {
     $user = $_POST['user'];
 
@@ -58,11 +65,8 @@ if (isPost('user')) {
     }
 
     if (!empty($errors)) {
-        $navContent = renderTemplate('templates/nav-items.php', []);
         $mainContent = renderTemplate('templates/sign-up.php', ['navContent' => $navContent,
             'user' => $user, 'form_error_class' => 'form--invalid', 'errors' => $errors]);
-        $layoutContent = renderTemplate('templates/layout.php', ['headerContent' => $headerContent, 'mainContent' => $mainContent,
-            'footerContent' => $footerContent, 'title' => 'Регистрация', 'mainClass' => '']);
     } else {
         if ($fileSize > 0) {
             $imagePath = 'img/' . uniqid('', TRUE) . '.' . pathinfo($_FILES['avatar']['name'])['extension'];
@@ -71,16 +75,13 @@ if (isPost('user')) {
         $data = [$user['name'], $user['email'], password_hash($user['password'],  PASSWORD_DEFAULT), $imagePath, $user['contacts']];
         dbInsertUser($connection, $data);
 
-        header("Location: index.php");
+        header("Location: login.php");
     }
 } else {
-    $navContent = renderTemplate('templates/nav-items.php', []);
     $mainContent = renderTemplate('templates/sign-up.php', ['navContent' => $navContent, 'form_error_class' => '',
         'user' => ['name' => '', 'email' => '', 'password' => '', 'contacts' => '']]);
-    $layoutContent = renderTemplate('templates/layout.php', ['headerContent' => $headerContent, 'mainContent' => $mainContent,
-        'footerContent' => $footerContent, 'title' => 'Регистрация', 'mainClass' => '']);
 }
 
+$layoutContent = renderTemplate('templates/layout.php', ['headerContent' => $headerContent, 'mainContent' => $mainContent,
+    'footerContent' => $footerContent, 'title' => 'Регистрация', 'mainClass' => '']);
 echo $layoutContent;
-
-?>

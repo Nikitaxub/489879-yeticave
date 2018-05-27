@@ -1,5 +1,5 @@
 <?= $navContent; ?>
-  <form class="form container <?= $form_error_class; ?>" action="" method="post">
+  <form class="form container" action="" method="post">
     <h2>Вход</h2>
     <div class="form__item <?php if ($errors['email']) {echo 'form__item--invalid';} ?>">
       <label for="email">E-mail*</label>
